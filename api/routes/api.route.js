@@ -2,10 +2,8 @@
 module.exports = function(app) {
 	var apiController = require('../controllers/api.controller');
 
-	app.route('/api/list')
-	.get(apiController.list);
-
 	app.route('/api')
+	.get(apiController.list)
 	.post(apiController.update);
 
 	app.route('/api/deleteAll')
