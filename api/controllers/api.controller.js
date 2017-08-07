@@ -95,10 +95,6 @@ var mongoose = require('mongoose'),
 		};
 	};
 
-	function convertTimeFormat (_timestamp) {		
-		return new Date(_timestamp).toLocaleString('en-US', { hour: 'numeric',minute:'numeric', hour12: true });
-	};
-
 	function deleteAll () {
 		return function (_request, _response) {
 			API.remove({}, function(_error, _data) {
@@ -108,4 +104,8 @@ var mongoose = require('mongoose'),
 			    _response.json({ message: 'Deleted Successfully' });
 			});
 		};
+	};
+
+	function convertTimeFormat (_timestamp) {		
+		return new Date(_timestamp).toLocaleString('en-US', { hour: 'numeric',minute:'numeric', hour12: true });
 	};

@@ -1,39 +1,64 @@
-# node-js-getting-started
+# api-test
 
-A barebones Node.js app using [Express 4](http://expressjs.com/).
+Build a version controlled key-value store with a HTTP API we can query that from. The API needs to be able to:
 
-This application supports the [Getting Started with Node on Heroku](https://devcenter.heroku.com/articles/getting-started-with-nodejs) article - check it out.
+1. Accept a key(string) and value(some json blob/string) {"key" : "value"} and store them. If an existing key is sent, the value should be updated
 
-## Running Locally
+2. Accept a key and return the corresponding latest value
 
-Make sure you have [Node.js](http://nodejs.org/) and the [Heroku CLI](https://cli.heroku.com/) installed.
+3. When given a key AND a timestamp, return whatever the value of the key at the time was.
 
-```sh
-$ git clone git@github.com:heroku/node-js-getting-started.git # or clone your own fork
-$ cd node-js-getting-started
-$ npm install
-$ npm start
-```
+------
 
-Your app should now be running on [localhost:5000](http://localhost:5000/).
+Example:
 
-## Deploying to Heroku
+Method: POST
 
-```
-$ heroku create
-$ git push heroku master
-$ heroku open
-```
-or
+Endpoint: /api
 
-[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+Body: JSON: {mykey : value1}
 
-## Documentation
+Time: 6.00 pm
 
-For more information about using Node.js on Heroku, see these Dev Center articles:
+Response: {"key":"mykey", "value":"value1", "timestamp": time } //Where time is timestamp of the post request (6.00pm) .
 
-- [Getting Started with Node.js on Heroku](https://devcenter.heroku.com/articles/getting-started-with-nodejs)
-- [Heroku Node.js Support](https://devcenter.heroku.com/articles/nodejs-support)
-- [Node.js on Heroku](https://devcenter.heroku.com/categories/nodejs)
-- [Best Practices for Node.js Development](https://devcenter.heroku.com/articles/node-best-practices)
-- [Using WebSockets on Heroku with Node.js](https://devcenter.heroku.com/articles/node-websockets)
+------
+
+Method: GET 
+
+Endpoint: /api/mykey
+
+Response: {"value": value1 } 
+
+------
+
+Method: POST
+
+Endpoint: /api
+
+Body: JSON: {mykey : value2}
+
+Time: 6.05 pm
+
+Response: {"key":"mykey", "value":"value2", "timestamp": time } //Where time is timestamp of the new value (6.05pm) .
+
+
+------
+
+Method: GET 
+
+Endpoint: /api/mykey
+
+Response: {"value": value2 }
+
+------
+
+Method: GET 
+
+Endpoint: /api/mykey?timestamp=1440568980 [6.03pm] // notice that the time here is not exactly 6.00pm
+
+Response: {"value": value1 } // still return value 1 , because value 2 was only added at 6.05pm
+
+
+
+All timestamps are unix timestamps according UTC timezone.
